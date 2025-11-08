@@ -23,6 +23,8 @@ namespace EduPlatform.Data
                 .HasForeignKey(q => q.CourseId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Entity(typeof(Quiz));
+
             builder.Entity<Quiz>()
                 .HasMany(q => q.Questions)
                 .WithOne(qn => qn.Quiz!)
