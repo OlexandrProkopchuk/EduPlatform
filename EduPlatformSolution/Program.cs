@@ -1,26 +1,30 @@
-using EduPlatform.Data;
+// !!! ЗАМІНИ на свій namespace та класи:
+using EduPlatform.Data;          // де лежить AppDbContext
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+// якщо в тебе нема власного ApplicationUser — використовуй IdentityUser нижче
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext
+// 1) DbContext з рядком підключення "DefaultConnection"
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = false;
-})
-.AddRoles<IdentityRole>()
-.AddEntityFrameworkStores<AppDbContext>();
+// 2) Identity + ролі + зберігання в EF
+builder.Services
+    .AddDefaultIdentity<ApplicationUser>(options =>   // або ApplicationUser, якщо створював
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+    })
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>();
 
+// 3) MVC і Razor Pages (Потрібно для Identity UI!)
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
-// ����������� ��������...
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -29,14 +33,19 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
 
-app.UseAuthentication();  // ������� �� Authorization
+// ОБОВ’ЯЗКОВО: спочатку Authentication, потім Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
+// Маршрути MVC
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages(); // ���� � Identity UI
+
+// ОБОВ’ЯЗКОВО: підключити Razor Pages, інакше /Identity/... дає 404
+app.MapRazorPages();
 
 app.Run();
