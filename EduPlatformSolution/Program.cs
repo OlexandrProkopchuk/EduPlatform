@@ -1,18 +1,15 @@
-// !!! ЗАМІНИ на свій namespace та класи:
-using EduPlatform.Data;          // де лежить AppDbContext
+using EduPlatform.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-// якщо в тебе нема власного ApplicationUser — використовуй IdentityUser нижче
+using EduPlatform.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1) DbContext з рядком підключення "DefaultConnection"
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 2) Identity + ролі + зберігання в EF
 builder.Services
-    .AddDefaultIdentity<ApplicationUser>(options =>   // або ApplicationUser, якщо створював
+    .AddDefaultIdentity<ApplicationUser>(options => 
     {
         options.SignIn.RequireConfirmedAccount = false;
     })
@@ -22,6 +19,7 @@ builder.Services
 // 3) MVC і Razor Pages (Потрібно для Identity UI!)
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<IQuizService, QuizService>();
 
 var app = builder.Build();
 

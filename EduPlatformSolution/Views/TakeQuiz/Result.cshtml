@@ -1,0 +1,10 @@
+﻿@model EduPlatform.Data.Attempt
+@{
+    ViewData["Title"] = "Результат";
+}
+<h2>Результат</h2>
+
+<p><strong>Тест:</strong> @Model.Quiz?.Title</p>
+<p><strong>Бали:</strong> @Model.Score / @Model.MaxScore (@ViewBag.Percent%)</p>
+
+<a class="btn btn-secondary" asp-controller="Quizzes" asp-action="Index">Повернутися до тестів</a>

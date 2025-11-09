@@ -8,7 +8,7 @@ namespace EduPlatform.Data
         public int Id { get; set; }
 
         [Required]
-        public string UserId { get; set; } = string.Empty; // посилання на ApplicationUser.Id
+        public string UserId { get; set; } = string.Empty; 
 
         [Required]
         public int QuizId { get; set; }
@@ -19,6 +19,8 @@ namespace EduPlatform.Data
 
         [Range(0, int.MaxValue)]
         public int Score { get; set; }
+
+        [Range(0, int.MaxValue)]
+        public int MaxScore { get; set; }
     }
 }
- 

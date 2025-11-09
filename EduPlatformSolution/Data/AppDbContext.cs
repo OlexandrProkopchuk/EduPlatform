@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace EduPlatform.Data
 {
@@ -13,31 +14,31 @@ namespace EduPlatform.Data
         public DbSet<AnswerOption> AnswerOptions => Set<AnswerOption>();
         public DbSet<Attempt> Attempts => Set<Attempt>();
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
 
-            builder.Entity<Course>()
+            modelBuilder.Entity<Course>()
                 .HasMany(c => c.Quizzes)
                 .WithOne(q => q.Course!)
                 .HasForeignKey(q => q.CourseId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity(typeof(Quiz));
+            modelBuilder.Entity(typeof(Quiz));
 
-            builder.Entity<Quiz>()
+            modelBuilder.Entity<Quiz>()
                 .HasMany(q => q.Questions)
                 .WithOne(qn => qn.Quiz!)
                 .HasForeignKey(qn => qn.QuizId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Question>()
-                .HasMany(qn => qn.Options)
+            modelBuilder.Entity<Question>()
+                .HasMany(qn => qn.AnswerOptions)
                 .WithOne(o => o.Question!)
                 .HasForeignKey(o => o.QuestionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Quiz>()
+            modelBuilder.Entity<Quiz>()
                 .HasMany(q => q.Attempts)
                 .WithOne(a => a.Quiz!)
                 .HasForeignKey(a => a.QuizId)

@@ -18,6 +18,6 @@ namespace EduPlatform.Data
         [Required, StringLength(20)]
         public string Type { get; set; } = "single";
 
-        public ICollection<AnswerOption> Options { get; set; } = new List<AnswerOption>();
+        public ICollection<AnswerOption> AnswerOptions { get; set; } = new List<AnswerOption>();
     }
 }

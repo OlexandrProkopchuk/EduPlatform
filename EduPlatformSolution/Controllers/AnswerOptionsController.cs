@@ -19,11 +19,25 @@ namespace EduPlatformSolution.Controllers
         }
 
         // GET: AnswerOptions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? questionId)
         {
-            var appDbContext = _context.AnswerOptions.Include(a => a.Question);
-            return View(await appDbContext.ToListAsync());
+            IQueryable<AnswerOption> query =
+                _context.AnswerOptions
+                        .Include(a => a.Question);
+
+            if (questionId.HasValue)
+                query = query.Where(a => a.QuestionId == questionId.Value);
+
+            ViewBag.Question = questionId.HasValue
+                ? await _context.Questions
+                                .Include(q => q.Quiz)
+                                .FirstOrDefaultAsync(q => q.Id == questionId.Value)
+                : null;
+
+            var list = await query.OrderBy(a => a.Id).ToListAsync();
+            return View(list);
         }
+
 
         // GET: AnswerOptions/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -45,24 +59,35 @@ namespace EduPlatformSolution.Controllers
         }
 
         // GET: AnswerOptions/Create
-        public IActionResult Create()
+        public IActionResult Create(int? questionId)
         {
-            ViewData["QuestionId"] = new SelectList(_context.Questions, "Id", "Text");
-            return View();
+            // красиві підписи: НазваТесту / ТекстПитання
+            ViewData["QuestionId"] = new SelectList(
+                _context.Questions.Include(q => q.Quiz)
+                    .Select(q => new { q.Id, Title = q.Quiz.Title + " / " + q.Text }),
+                "Id", "Title", questionId);
+
+            return View(new AnswerOption { QuestionId = questionId ?? 0 });
         }
 
         // POST: AnswerOptions/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,QuestionId,Text,IsCorrect")] AnswerOption answerOption)
         {
             if (ModelState.IsValid)
             {
+                if (answerOption.IsCorrect)
+                {
+                    var others = await _context.AnswerOptions
+                        .Where(a => a.QuestionId == answerOption.QuestionId && a.IsCorrect)
+                        .ToListAsync();
+                    foreach (var o in others) o.IsCorrect = false;
+                }
+
                 _context.Add(answerOption);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { questionId = answerOption.QuestionId });
             }
             ViewData["QuestionId"] = new SelectList(_context.Questions, "Id", "Text", answerOption.QuestionId);
             return View(answerOption);
@@ -92,31 +117,31 @@ namespace EduPlatformSolution.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,QuestionId,Text,IsCorrect")] AnswerOption answerOption)
         {
-            if (id != answerOption.Id)
-            {
-                return NotFound();
-            }
+            if (id != answerOption.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if (answerOption.IsCorrect)
+                    {
+                        var others = await _context.AnswerOptions
+                            .Where(a => a.QuestionId == answerOption.QuestionId && a.Id != answerOption.Id && a.IsCorrect)
+                            .ToListAsync();
+                        foreach (var o in others) o.IsCorrect = false;
+                    }
+
                     _context.Update(answerOption);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AnswerOptionExists(answerOption.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!AnswerOptionExists(answerOption.Id)) return NotFound();
+                    throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { questionId = answerOption.QuestionId });
             }
+
             ViewData["QuestionId"] = new SelectList(_context.Questions, "Id", "Text", answerOption.QuestionId);
             return View(answerOption);
         }
@@ -146,13 +171,13 @@ namespace EduPlatformSolution.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var answerOption = await _context.AnswerOptions.FindAsync(id);
+            int? qid = answerOption?.QuestionId;
+
             if (answerOption != null)
-            {
                 _context.AnswerOptions.Remove(answerOption);
-            }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new { questionId = qid });
         }
 
         private bool AnswerOptionExists(int id)
