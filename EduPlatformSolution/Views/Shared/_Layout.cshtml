@@ -11,43 +11,44 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
             <div class="container">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">EduPlatform</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav"
+                        aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="topNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Courses" asp-action="Index">Courses</a>
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Quizzes" asp-action="Index">Quizzes</a>
+                            <a class="nav-link" asp-controller="Courses" asp-action="Index">Courses</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Questions" asp-action="Index">Questions</a>
+                            <a class="nav-link" asp-controller="Quizzes" asp-action="Index">Quizzes</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="AnswerOptions" asp-action="Index">Answers</a>
+                            <a class="nav-link text-dark" asp-controller="Results" asp-action="Index">Results</a>
                         </li>
                     </ul>
 
+                    <!-- Login/Register / User menu -->
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
-    </header>
 
+    </header>
+        
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="container py-4">
+            <h2 class="main-title">@ViewData["Title"]</h2>
+            <partial name="_Alerts" />
+
             @RenderBody()
         </main>
     </div>

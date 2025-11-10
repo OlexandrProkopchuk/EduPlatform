@@ -1,41 +1,42 @@
 @model IEnumerable<EduPlatform.Data.Course>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Courses";
 }
 
-<h1>Index</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">Courses</h2>
+    <a asp-action="Create" class="btn btn-primary">
+        + Add New Course
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center">
+        Наразі немає курсів. Створіть перший!
+    </div>
 }
-    </tbody>
-</table>
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Title</h5>
+                        <p class="card-text text-muted" style="min-height:60px;">
+                            @item.Description
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white border-0 d-flex justify-content-between">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm">View</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

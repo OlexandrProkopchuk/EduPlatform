@@ -1,0 +1,17 @@
+﻿@model EduPlatform.Data.Attempt
+
+@{
+    ViewData["Title"] = "Результат";
+    var percent = Model.MaxScore > 0 ? (int)Math.Round(100.0 * Model.Score / Model.MaxScore) : 0;
+}
+
+<h2>@Model.Quiz.Title</h2>
+
+<div class="card mt-3 shadow-sm">
+    <div class="card-body">
+        <p><strong>Дата проходження:</strong> @Model.FinishedAt?.ToLocalTime()</p>
+        <p><strong>Результат:</strong> @Model.Score / @Model.MaxScore (@percent%)</p>
+
+        <a asp-action="Index" class="btn btn-secondary mt-3">Назад</a>
+    </div>
+</div>
