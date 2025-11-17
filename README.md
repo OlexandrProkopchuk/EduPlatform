@@ -1,75 +1,90 @@
-# Освітня платформа з тестами для перевірки знань
-
-Це навчальний проєкт з лабораторної роботи №1 (C#, .NET), який реалізує просту **освітню платформу**:
-- викладач (або адміністратор) може створювати курси та тести;
-- до кожного тесту додаються питання та варіанти відповідей;
-- студент може проходити тест, отримувати результат та переглядати історію спроб.
-
-Проєкт виконаний на базі **ASP.NET Core MVC**, **Entity Framework Core** та **Identity**.
+# EduPlatform — Educational Quiz Platform  
+**ASP.NET Core MVC | Entity Framework Core | Bootstrap 5 | xUnit Integration Tests**
 
 ---
 
-## Функціонал
+## Project Overview
 
-### 1. Користувачі та автентифікація
-- Реєстрація та вхід користувача (ASP.NET Core Identity).
-- Вхід не є обовʼязковим для перегляду списку курсів/тестів (налаштовується за бажанням).
-- Для проходження тесту можна:
-  - або вимагати авторизацію,
-  - або дозволити анонімну спробу (в поточній версії використовується `UserId` або `"anonymous"`).
+**EduPlatform** is an educational web platform built with **ASP.NET Core MVC**.  
+It allows users to:
 
-### 2. Курси (Courses)
-- Список курсів.
-- Створення, редагування, видалення курсу.
-- У кожного курсу є:
-  - `Title` — назва;
-  - `Description` — опис.
+- Create and manage **courses**
+- Add and configure **quizzes**
+- Add **questions** and **answer options**
+- Pass quizzes through an interactive step-by-step interface
+- View quiz results and scoring
+- Run **full integration tests** (xUnit + TestServer + SQLite InMemory)
 
-### 3. Тести (Quizzes)
-- Привʼязка тесту до курсу.
-- Поля тесту:
-  - `Title` — назва тесту;
-  - `TimeLimitMinutes` — ліміт часу (для відображення/майбутньої логіки).
-- CRUD-операції:
-  - створення, редагування, перегляд, видалення.
-- На сторінці списку тестів (`Quizzes/Index`) є кнопка **“Почати”**, яка веде на сторінку проходження тесту.
+This project was developed as part of a laboratory work assignment in .NET/C#.
 
-### 4. Питання та варіанти відповідей
-**Моделі:**
-- `Question`:
-  - `Id`
-  - `QuizId` — до якого тесту належить
-  - `Text` — текст питання
-  - `Type` — тип питання (наприклад, single choice)
-- `AnswerOption`:
-  - `Id`
-  - `QuestionId`
-  - `Text`
-  - `IsCorrect` — чи є варіант правильним
+---
 
-**Функціонал:**
-- окремі контролери `QuestionsController` та `AnswerOptionsController` для CRUD:
-  - створити питання для тесту,
-  - додати до нього варіанти відповідей,
-  - позначити, який варіант правильний.
+## Features
 
-### 5. Проходження тесту (TakeQuiz)
+### Courses
+- Full CRUD
+- Each course can contain multiple quizzes
 
-**ViewModel:** `TakeQuizViewModel`  
-Містить:
-- `QuizId`
-- `Title`
-- список питань з варіантами (`Questions`, `Options`).
+### Quizzes
+- Title, time limit, attached course
+- CRUD functionality
 
-**Сторінка проходження тесту** (`Views/TakeQuiz/Start.cshtml`):
-- показує питання по одному “кроку” (step-by-step, з кнопками **Назад/Далі/Завершити**);
-- для кожного питання варіанти відповідей відображаються як `<input type="radio">`;
-- відповіді відправляються у форму:
+### Questions & Answers
+- Unlimited number of questions per quiz  
+- Each question has several answer options  
+- Support for marking correct answers  
 
-```html
-<input type="hidden" name="QuizId" value="@Model.QuizId" />
+### Taking a Quiz
+- Questions are shown **step-by-step**
+- Navigation: *Previous / Next / Submit*
+- Progress bar
+- Form submission format:
 
-<input class="form-check-input"
-       type="radio"
-       name="Answers[@q.Id]"
-       value="@opt.Id" />
+QuizId=1
+Answers[1]=3
+Answers[5]=14
+
+
+### Quiz Results
+- Correct answer calculation via `QuizService`
+- Storing quiz attempts
+- Displaying score and selected answers  
+
+---
+
+## Technologies Used
+
+| Technology | Purpose |
+|-----------|---------|
+| **ASP.NET Core MVC (.NET 8)** | main application framework |
+| **Entity Framework Core** | data access |
+| **SQL Server / SQLite InMemory** | persistent + test database |
+| **Bootstrap 5** | UI and layout |
+| **Identity** | authentication |
+| **xUnit + WebApplicationFactory** | integration tests |
+
+---
+
+## Project Structure
+
+EduPlatformSolution/
+├── Controllers/
+├── Data/
+│ ├── AppDbContext.cs
+│ ├── Models/
+│ ├── ViewModels/
+├── Services/
+├── Views/
+├── EduPlatform.IntegrationTests/
+│ ├── Infrastructure/
+│ ├── Pages/
+├── wwwroot/
+├── Program.cs
+├── appsettings.json
+└── README.md
+
+
+## Author
+
+Developed as part of a laboratory assignment in .NET / C#.
+Students: Prokopchuk Oleksandr, Polina Grishko of group IPZ-33/8 
