@@ -1,0 +1,46 @@
+﻿@model IEnumerable<EduPlatform.Data.Attempt>
+
+@{
+    ViewData["Title"] = "Мої результати";
+}
+
+<h2 class="mb-4">Мої результати</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center">
+        Ви ще не проходили жодного тесту.
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Тест</th>
+                <th>Дата</th>
+                <th>Результат</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var percent = item.MaxScore > 0
+                ? (int)Math.Round(100.0 * item.Score / item.MaxScore)
+                : 0;
+
+                <tr>
+                    <td>@item.Quiz.Title</td>
+                    <td>@item.FinishedAt?.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@item.Score / @item.MaxScore (@percent%)</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
+                            Деталі
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

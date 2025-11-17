@@ -18,5 +18,15 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    padding-bottom: 40px;
+}
+
+.main-title {
+    margin: 1rem 0 2rem;
+}
+
+.card-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
