@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8 d17.14
+VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduPlatformSolution", "EduPlatformSolution.csproj", "{CEED41B7-867D-4F9C-9223-96C0CF0BE6CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EduPlatform.IntegrationTests", "..\EduPlatform.IntegrationTests\EduPlatform.IntegrationTests.csproj", "{38170919-222D-4CAC-BB4C-45FE6B865149}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{CEED41B7-867D-4F9C-9223-96C0CF0BE6CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEED41B7-867D-4F9C-9223-96C0CF0BE6CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEED41B7-867D-4F9C-9223-96C0CF0BE6CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38170919-222D-4CAC-BB4C-45FE6B865149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38170919-222D-4CAC-BB4C-45FE6B865149}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38170919-222D-4CAC-BB4C-45FE6B865149}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38170919-222D-4CAC-BB4C-45FE6B865149}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

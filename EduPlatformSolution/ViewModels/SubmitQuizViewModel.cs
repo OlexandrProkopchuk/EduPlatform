@@ -5,7 +5,7 @@
     {
         public int QuizId { get; set; }
 
-        // name="Answers[<questionId>]" value="<optionId>"
-        public Dictionary<int, int[]> Answers { get; set; } = new();
+        // ключ = Id питання, значення = Id обраного варіанту
+        public Dictionary<int, int> Answers { get; set; } = new();
     }
 }
