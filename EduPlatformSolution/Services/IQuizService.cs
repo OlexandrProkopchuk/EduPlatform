@@ -6,5 +6,5 @@ namespace EduPlatform.Services;
 
 public interface IQuizService
 {
-    Task<Attempt> GradeAsync(int quizId, string userId, Dictionary<int, int[]> answers);
+    Task<EduPlatform.Data.Attempt> GradeAsync(int quizId, string userId, Dictionary<int, int> answers);
 }

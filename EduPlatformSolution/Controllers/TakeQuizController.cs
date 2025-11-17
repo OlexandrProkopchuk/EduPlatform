@@ -55,16 +55,18 @@ namespace EduPlatformSolution.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Submit([FromForm] SubmitQuizViewModel model)
+        public async Task<IActionResult> Submit(SubmitQuizViewModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            // НІЯКОГО ValidateAntiForgeryToken і НІЯКОГО BadRequest по ModelState
 
             var userId = _userManager.GetUserId(User) ?? "anonymous";
-            var answers = model.Answers ?? new Dictionary<int, int[]>();
+
+            // Якщо з якоїсь причини Answers не прийшли — створимо порожній словник
+            var answers = model.Answers ?? new Dictionary<int, int>();
 
             var attempt = await _quizService.GradeAsync(model.QuizId, userId, answers);
+
+            // Переходимо на сторінку результату
             return RedirectToAction(nameof(Result), new { id = attempt.Id });
         }
 

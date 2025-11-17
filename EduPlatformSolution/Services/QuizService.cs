@@ -16,32 +16,25 @@ namespace EduPlatform.Services
             _context = context;
         }
 
-        // Одновибір: answers[questionId] = selectedOptionId    
-        public async Task<Attempt> GradeAsync(int quizId, string userId, Dictionary<int, int[]> answers)
+        public async Task<Attempt> GradeAsync(int quizId, string userId, Dictionary<int, int> answers)
         {
             var quiz = await _context.Quizzes
                 .Include(q => q.Questions)
-                    .ThenInclude(qn => qn.AnswerOptions)
+                    .ThenInclude(q => q.AnswerOptions)
                 .FirstOrDefaultAsync(q => q.Id == quizId);
 
             if (quiz == null)
-                throw new InvalidOperationException($"Quiz {quizId} not found");
+                throw new Exception("Quiz not found");
 
             int max = quiz.Questions.Count;
             int score = 0;
 
             foreach (var q in quiz.Questions)
             {
-                if (answers.TryGetValue(q.Id, out var selectedIdsArray))
+                if (answers.TryGetValue(q.Id, out var selectedOptionId))
                 {
-                    var selected = selectedIdsArray?.Distinct().ToHashSet() ?? new HashSet<int>();
-
-                    var correct = q.AnswerOptions
-                        .Where(a => a.IsCorrect)
-                        .Select(a => a.Id)
-                        .ToHashSet();
-
-                    if (selected.SetEquals(correct))
+                    var correctOption = q.AnswerOptions.FirstOrDefault(a => a.IsCorrect);
+                    if (correctOption != null && correctOption.Id == selectedOptionId)
                         score++;
                 }
             }
@@ -51,7 +44,6 @@ namespace EduPlatform.Services
                 QuizId = quizId,
                 UserId = userId,
                 Score = score,
-                // переконайся, що у моделі Attempt є це поле
                 MaxScore = max,
                 FinishedAt = DateTime.UtcNow
             };
